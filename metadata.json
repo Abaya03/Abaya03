@@ -1,0 +1,6 @@
+{
+  "name": "ASI_Paie",
+  "description": "Système professionnel de gestion de la paie et des ressources humaines conforme aux normes mauritaniennes",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

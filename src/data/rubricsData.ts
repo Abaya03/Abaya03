@@ -1,0 +1,481 @@
+import { PayRubricDefinition } from '../types';
+
+export const INITIAL_PAY_RUBRICS: PayRubricDefinition[] = [
+  {
+    id: 'RUB-0',
+    code: '0',
+    label: 'SALAIRE DE BASE',
+    labelAr: 'الراتب القاعدي',
+    sens: 'G',
+    sur: 'Brut',
+    chapter: '0',
+    account: '641100',
+    isIts: true,
+    isCnss: true,
+    isCnam: true,
+    isPlafonne: false,
+    isAvantageNature: false,
+    isCumulable: false,
+    baseAuto: false,
+    nombreAuto: false,
+    formula: {
+      expression: '[BASE]',
+      description: 'Salaire de base fixe conventionnel',
+      variables: ['BASE'],
+      defaultBaseType: 'SALAIRE_BASE'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['CDI', 'CDD', 'STAGE'],
+      isMandatory: true,
+      frequency: 'MENSUEL',
+      appliesToAllByDefault: true
+    }
+  },
+  {
+    id: 'RUB-1',
+    code: '1',
+    label: 'SALAIRE DE BASE CONTRACTUEL',
+    labelAr: 'الراتب القاعدي التعاقدي',
+    sens: 'G',
+    sur: 'Brut',
+    chapter: '0',
+    account: '650606',
+    isIts: true,
+    isCnss: true,
+    isCnam: true,
+    isPlafonne: false,
+    isAvantageNature: false,
+    isCumulable: false,
+    baseAuto: true,
+    nombreAuto: true,
+    formula: {
+      expression: '[BASE] * [NOMBRE] / 30',
+      description: 'Calcul au prorata des jours travaillés (base 30 jours)',
+      variables: ['BASE', 'NOMBRE'],
+      defaultBaseType: 'SALAIRE_BASE'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['CDI', 'CDD'],
+      isMandatory: true,
+      frequency: 'MENSUEL',
+      appliesToAllByDefault: true
+    }
+  },
+  {
+    id: 'RUB-2',
+    code: '2',
+    label: 'PRIME D\'ANCIENNETÉ',
+    labelAr: 'علاوة الأقدمية',
+    sens: 'G',
+    sur: 'Brut',
+    chapter: '0',
+    account: '641200',
+    isIts: true,
+    isCnss: true,
+    isCnam: true,
+    isPlafonne: false,
+    isAvantageNature: false,
+    isCumulable: false,
+    baseAuto: true,
+    nombreAuto: true,
+    formula: {
+      expression: '[SALAIRE_BASE] * ([ANCIENNETE] * 1.5) / 100',
+      description: '1.5% par an d\'ancienneté légale (Code du travail)',
+      variables: ['SALAIRE_BASE', 'ANCIENNETE'],
+      condition: '[ANCIENNETE] >= 2',
+      defaultRate: 3,
+      defaultBaseType: 'SALAIRE_BASE'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['CDI'],
+      isMandatory: false,
+      frequency: 'MENSUEL',
+      appliesToAllByDefault: true
+    }
+  },
+  {
+    id: 'RUB-3',
+    code: '3',
+    label: 'HEURES SUPPLÉMENTAIRES À 115%',
+    labelAr: 'ساعات إضافية 115%',
+    sens: 'G',
+    sur: 'Brut',
+    chapter: '0',
+    account: '641210',
+    isIts: true,
+    isCnss: true,
+    isCnam: true,
+    isPlafonne: false,
+    isAvantageNature: false,
+    isCumulable: true,
+    baseAuto: true,
+    nombreAuto: false,
+    formula: {
+      expression: '[NB_HEURES] * ([SALAIRE_BASE] / 173.33) * 1.15',
+      description: 'Majoration de 15% pour les premières heures supplémentaires',
+      variables: ['NB_HEURES', 'SALAIRE_BASE'],
+      defaultRate: 115,
+      defaultBaseType: 'SALAIRE_BASE'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['CDI', 'CDD'],
+      isMandatory: false,
+      frequency: 'OCCASIONNEL',
+      appliesToAllByDefault: true
+    }
+  },
+  {
+    id: 'RUB-4',
+    code: '4',
+    label: 'HEURES SUPPLÉMENTAIRES À 140%',
+    labelAr: 'ساعات إضافية 140%',
+    sens: 'G',
+    sur: 'Brut',
+    chapter: '0',
+    account: '641211',
+    isIts: true,
+    isCnss: true,
+    isCnam: true,
+    isPlafonne: false,
+    isAvantageNature: false,
+    isCumulable: true,
+    baseAuto: true,
+    nombreAuto: false,
+    formula: {
+      expression: '[NB_HEURES] * ([SALAIRE_BASE] / 173.33) * 1.40',
+      description: 'Majoration de 40% pour heures de nuit ou prolongées',
+      variables: ['NB_HEURES', 'SALAIRE_BASE'],
+      defaultRate: 140,
+      defaultBaseType: 'SALAIRE_BASE'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['CDI', 'CDD'],
+      isMandatory: false,
+      frequency: 'OCCASIONNEL',
+      appliesToAllByDefault: true
+    }
+  },
+  {
+    id: 'RUB-5',
+    code: '5',
+    label: 'HEURES SUPPLÉMENTAIRES À 150%',
+    labelAr: 'ساعات إضافية 150%',
+    sens: 'G',
+    sur: 'Brut',
+    chapter: '0',
+    account: '641212',
+    isIts: true,
+    isCnss: true,
+    isCnam: true,
+    isPlafonne: false,
+    isAvantageNature: false,
+    isCumulable: true,
+    baseAuto: true,
+    nombreAuto: false,
+    formula: {
+      expression: '[NB_HEURES] * ([SALAIRE_BASE] / 173.33) * 1.50',
+      description: 'Majoration de 50% au-delà du quota légal',
+      variables: ['NB_HEURES', 'SALAIRE_BASE'],
+      defaultRate: 150,
+      defaultBaseType: 'SALAIRE_BASE'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['CDI', 'CDD'],
+      isMandatory: false,
+      frequency: 'OCCASIONNEL',
+      appliesToAllByDefault: true
+    }
+  },
+  {
+    id: 'RUB-6',
+    code: '6',
+    label: 'HEURES SUPPLÉMENTAIRES À 200%',
+    labelAr: 'ساعات إضافية 200%',
+    sens: 'G',
+    sur: 'Brut',
+    chapter: '0',
+    account: '641213',
+    isIts: true,
+    isCnss: true,
+    isCnam: true,
+    isPlafonne: false,
+    isAvantageNature: false,
+    isCumulable: true,
+    baseAuto: false,
+    nombreAuto: false,
+    formula: {
+      expression: '[NB_HEURES] * ([SALAIRE_BASE] / 173.33) * 2.00',
+      description: 'Majoration 100% jours fériés et dimanches chômés',
+      variables: ['NB_HEURES', 'SALAIRE_BASE'],
+      defaultRate: 200,
+      defaultBaseType: 'SALAIRE_BASE'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['CDI', 'CDD'],
+      isMandatory: false,
+      frequency: 'OCCASIONNEL',
+      appliesToAllByDefault: true
+    }
+  },
+  {
+    id: 'RUB-7',
+    code: '10',
+    label: 'INDEMNITÉ DE TRANSPORT',
+    labelAr: 'علاوة النقل',
+    sens: 'G',
+    sur: 'Net',
+    chapter: '0',
+    account: '641300',
+    isIts: false,
+    isCnss: false,
+    isCnam: false,
+    isPlafonne: true,
+    isAvantageNature: false,
+    isCumulable: false,
+    baseAuto: false,
+    nombreAuto: false,
+    formula: {
+      expression: '[BASE]',
+      description: 'Indemnité forfaitaire transport (Exonérée jusqu\'à 2 500 MRU)',
+      variables: ['BASE'],
+      defaultRate: 100,
+      defaultBaseType: 'FIXE'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['CDI', 'CDD'],
+      defaultFixedAmount: 3000,
+      isMandatory: false,
+      frequency: 'MENSUEL',
+      appliesToAllByDefault: true
+    }
+  },
+  {
+    id: 'RUB-8',
+    code: '12',
+    label: 'INDEMNITÉ DE LOGEMENT',
+    labelAr: 'علاوة السكن',
+    sens: 'G',
+    sur: 'Brut',
+    chapter: '0',
+    account: '641310',
+    isIts: true,
+    isCnss: true,
+    isCnam: true,
+    isPlafonne: false,
+    isAvantageNature: false,
+    isCumulable: false,
+    baseAuto: false,
+    nombreAuto: false,
+    formula: {
+      expression: '[BASE] * [TAUX] / 100',
+      description: 'Généralement 20% à 25% du salaire de base ou montant forfaitaire',
+      variables: ['BASE', 'TAUX'],
+      defaultRate: 20,
+      defaultBaseType: 'SALAIRE_BASE'
+    },
+    model: {
+      appliedCategories: ['Cadre', 'Cadre C1', 'Ingénieur'],
+      appliedContractTypes: ['CDI'],
+      isMandatory: false,
+      frequency: 'MENSUEL',
+      appliesToAllByDefault: false
+    }
+  },
+  {
+    id: 'RUB-9',
+    code: '14',
+    label: 'INDEMNITÉ DE FONCTION',
+    labelAr: 'علاوة الوظيفة والمسؤولية',
+    sens: 'G',
+    sur: 'Brut',
+    chapter: '0',
+    account: '641320',
+    isIts: true,
+    isCnss: true,
+    isCnam: true,
+    isPlafonne: false,
+    isAvantageNature: false,
+    isCumulable: false,
+    baseAuto: false,
+    nombreAuto: false,
+    formula: {
+      expression: '[BASE]',
+      description: 'Indemnité liée au poste de responsabilité managériale',
+      variables: ['BASE'],
+      defaultBaseType: 'FIXE'
+    },
+    model: {
+      appliedCategories: ['Direction', 'Cadre', 'Chef de Service'],
+      appliedContractTypes: ['CDI'],
+      isMandatory: false,
+      frequency: 'MENSUEL',
+      appliesToAllByDefault: false
+    }
+  },
+  {
+    id: 'RUB-15',
+    code: '15',
+    label: 'PRIME DE PANIER & RESTAURATION',
+    labelAr: 'علاوة الإطعام وسلة الغذاء',
+    sens: 'G',
+    sur: 'Net',
+    chapter: '0',
+    account: '641330',
+    isIts: false,
+    isCnss: false,
+    isCnam: false,
+    isPlafonne: true,
+    isAvantageNature: false,
+    isCumulable: true,
+    baseAuto: true,
+    nombreAuto: true,
+    formula: {
+      expression: '[NOMBRE] * 200',
+      description: '200 MRU par jour effectif de travail (exonéré selon barème)',
+      variables: ['NOMBRE'],
+      defaultRate: 200,
+      defaultBaseType: 'CUSTOM'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['CDI', 'CDD'],
+      isMandatory: false,
+      frequency: 'MENSUEL',
+      appliesToAllByDefault: true
+    }
+  },
+  {
+    id: 'RUB-50',
+    code: '50',
+    label: 'RETENUE CNSS RÉGIME DES PENSIONS (1%)',
+    labelAr: 'اقتطاع الصندوق الوطني للضمان الاجتماعي',
+    sens: 'R',
+    sur: 'Brut',
+    chapter: '4',
+    account: '431100',
+    isIts: false,
+    isCnss: true,
+    isCnam: false,
+    isPlafonne: true,
+    isAvantageNature: false,
+    isCumulable: false,
+    baseAuto: true,
+    nombreAuto: false,
+    formula: {
+      expression: 'Math.min([CNSS_BASE], 70000) * 0.01',
+      description: '1.00% plafonné à 70 000 MRU',
+      variables: ['CNSS_BASE'],
+      defaultRate: 1,
+      defaultBaseType: 'CNSS'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['CDI', 'CDD', 'STAGE'],
+      isMandatory: true,
+      frequency: 'MENSUEL',
+      appliesToAllByDefault: true
+    }
+  },
+  {
+    id: 'RUB-51',
+    code: '51',
+    label: 'RETENUE CNAM ASSURANCE MALADIE (4%)',
+    labelAr: 'اقتطاع الصندوق الوطني للتأمين الصحي',
+    sens: 'R',
+    sur: 'Brut',
+    chapter: '4',
+    account: '431200',
+    isIts: false,
+    isCnss: false,
+    isCnam: true,
+    isPlafonne: false,
+    isAvantageNature: false,
+    isCumulable: false,
+    baseAuto: true,
+    nombreAuto: false,
+    formula: {
+      expression: '[CNAM_BASE] * 0.04',
+      description: '4.00% déplafonné sur brut assujetti',
+      variables: ['CNAM_BASE'],
+      defaultRate: 4,
+      defaultBaseType: 'BRUT'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['CDI', 'CDD', 'STAGE'],
+      isMandatory: true,
+      frequency: 'MENSUEL',
+      appliesToAllByDefault: true
+    }
+  },
+  {
+    id: 'RUB-60',
+    code: '60',
+    label: 'RETENUE FISCALE ITS (BARÈME CGI)',
+    labelAr: 'الضريبة على الرواتب والأجور',
+    sens: 'R',
+    sur: 'Net',
+    chapter: '4',
+    account: '447100',
+    isIts: true,
+    isCnss: false,
+    isCnam: false,
+    isPlafonne: false,
+    isAvantageNature: false,
+    isCumulable: false,
+    baseAuto: true,
+    nombreAuto: false,
+    formula: {
+      expression: 'BAREME_ITS([IMPOSABLE])',
+      description: 'Barème progressif CGI après déduction CNSS/CNAM',
+      variables: ['IMPOSABLE'],
+      defaultBaseType: 'IMPOSABLE'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['CDI', 'CDD'],
+      isMandatory: true,
+      frequency: 'MENSUEL',
+      appliesToAllByDefault: true
+    }
+  },
+  {
+    id: 'RUB-70',
+    code: '70',
+    label: 'ACOMPTE SUR SALAIRE',
+    labelAr: 'تسبيق على الراتب',
+    sens: 'R',
+    sur: 'Net',
+    chapter: '4',
+    account: '425000',
+    isIts: false,
+    isCnss: false,
+    isCnam: false,
+    isPlafonne: false,
+    isAvantageNature: false,
+    isCumulable: false,
+    baseAuto: false,
+    nombreAuto: false,
+    formula: {
+      expression: '[BASE]',
+      description: 'Retenue nette directe sur virement',
+      variables: ['BASE'],
+      defaultBaseType: 'FIXE'
+    },
+    model: {
+      appliedCategories: ['Tous'],
+      appliedContractTypes: ['Tous'],
+      isMandatory: false,
+      frequency: 'OCCASIONNEL',
+      appliesToAllByDefault: true
+    }
+  }
+];
